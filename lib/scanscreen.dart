@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:google_mlkit_entity_extraction/google_mlkit_entity_extraction.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class ScanScreen extends StatefulWidget {
@@ -15,12 +16,15 @@ class ScanScreen extends StatefulWidget {
 
 class _ScanScreenState extends State<ScanScreen> {
   late TextRecognizer textRecognizer;
+  late EntityExtractor entityExtractor;
   String result = "";
+  List<EntityDM> entitiesList = [];
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
+    entityExtractor =
+        EntityExtractor(language: EntityExtractorLanguage.english);
     doTextRecognition();
   }
 
@@ -30,22 +34,30 @@ class _ScanScreenState extends State<ScanScreen> {
         await textRecognizer.processImage(image);
 
     result = recognizedText.text;
+    entitiesList.clear();
+
+    final List<EntityAnnotation> annotations =
+        await entityExtractor.annotateText(result);
+
+    result = "";
+    for (final annotation in annotations) {
+      annotation.start;
+      print(annotation.start);
+      annotation.end;
+      print(annotation.end);
+      annotation.text;
+      print(annotation.text);
+      for (final entity in annotation.entities) {
+        // entity.type;
+        // entity.rawValue;
+        result += entity.type.name + '\n' + annotation.text + '\n\n';
+        entitiesList.add(EntityDM(entity.type.name, annotation.text));
+      }
+    }
+    print(result);
     setState(() {
       result;
     });
-    for (TextBlock block in recognizedText.blocks) {
-      final Rect rect = block.boundingBox;
-      final List<Point<int>> cornerPoints = block.cornerPoints;
-      final String text = block.text;
-      final List<String> languages = block.recognizedLanguages;
-
-      for (TextLine line in block.lines) {
-        // Same getters as TextBlock
-        for (TextElement element in line.elements) {
-          // Same getters as TextBlock
-        }
-      }
-    }
   }
 
   @override
@@ -102,4 +114,11 @@ class _ScanScreenState extends State<ScanScreen> {
       ),
     );
   }
+}
+
+class EntityDM {
+  String name;
+  String value;
+
+  EntityDM(this.name, this.value);
 }
