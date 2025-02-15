@@ -1,13 +1,12 @@
 import 'dart:io';
 import 'dart:math';
-
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_mlkit_text_recognition/google_mlkit_text_recognition.dart';
 
 class RecognizerScreen extends StatefulWidget {
   File image;
-  RecognizerScreen(this.image);
+  RecognizerScreen(this.image, {super.key});
 
   @override
   State<RecognizerScreen> createState() => _RecognizerScreenState();
@@ -15,23 +14,24 @@ class RecognizerScreen extends StatefulWidget {
 
 class _RecognizerScreenState extends State<RecognizerScreen> {
   late TextRecognizer textRecognizer;
-  String result = "";
+  String results = "";
+
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     textRecognizer = TextRecognizer(script: TextRecognitionScript.latin);
     doTextRecognition();
   }
 
   doTextRecognition() async {
-    InputImage image = InputImage.fromFile(this.widget.image);
+    InputImage inputImage = InputImage.fromFile(this.widget.image);
     final RecognizedText recognizedText =
-        await textRecognizer.processImage(image);
+        await textRecognizer.processImage(inputImage);
 
-    result = recognizedText.text;
+    results = recognizedText.text;
+    print(results);
     setState(() {
-      result;
+      results;
     });
     for (TextBlock block in recognizedText.blocks) {
       final Rect rect = block.boundingBox;
@@ -52,51 +52,63 @@ class _RecognizerScreenState extends State<RecognizerScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Recognizer'),
+        backgroundColor: Colors.white,
+        title: const Text(
+          'Recognizer',
+          style: TextStyle(color: Colors.black),
+        ),
+        iconTheme: const IconThemeData(color: Colors.black),
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Container(
-              padding:
-                  const EdgeInsets.only(top: 10, bottom: 10, left: 5, right: 5),
-              child: Image.file(this.widget.image),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: Image.file(widget.image),
             ),
             Card(
               margin: const EdgeInsets.all(10),
-              color: Colors.grey.shade300,
+              color: Colors.grey.shade200,
               child: Column(
                 children: [
                   Container(
-                    padding: const EdgeInsets.all(8),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        const Icon(Icons.document_scanner),
-                        const Text(
-                          'Result',
-                          style: TextStyle(fontSize: 18),
-                        ),
-                        InkWell(
-                          onTap: () {
-                            Clipboard.setData(ClipboardData(text: result));
-                            SnackBar snackBar =
-                                const SnackBar(content: Text('copied'));
-                            ScaffoldMessenger.of(context)
-                                .showSnackBar(snackBar);
-                          },
-                          child: const Icon(Icons.copy),
-                        ),
-                      ],
+                    color: Colors.white,
+                    child: Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          const Icon(
+                            Icons.document_scanner,
+                            color: Colors.black,
+                          ),
+                          const Text(
+                            'Results',
+                            style: TextStyle(color: Colors.black, fontSize: 18),
+                          ),
+                          InkWell(
+                            onTap: () {
+                              Clipboard.setData(ClipboardData(text: results));
+                              SnackBar sn =
+                                  const SnackBar(content: Text("Copied"));
+                              ScaffoldMessenger.of(context).showSnackBar(sn);
+                            },
+                            child: const Icon(
+                              Icons.copy,
+                              color: Colors.black,
+                            ),
+                          )
+                        ],
+                      ),
                     ),
                   ),
                   Text(
-                    result,
+                    results,
                     style: const TextStyle(fontSize: 18),
                   ),
                 ],
               ),
-            ),
+            )
           ],
         ),
       ),
