@@ -1,17 +1,18 @@
-# scanapp
+# Scan App 📄🔍
 
-A new Flutter project.
+A document scanning application built with Flutter, utilizing `google_mlkit_text_recognition` for text recognition and `google_mlkit_entity_extraction` for extracting key information from text.
 
-## Getting Started
+## ✨ Key Features
+- 📷 **Scan Documents**: Use the camera to scan and recognize text from images.
+- 🔍 **Text Recognition**: Convert images into editable and copyable text.
+- 🎯 **Entity Extraction**: Identify and classify important information such as phone numbers, emails, URLs, etc.
+- 📂 **Save & Share**: Save scanned results or share them easily.
 
-This project is a starting point for a Flutter application.
+## 🛠️ Technologies Used
+- **Flutter** 💙 (Dart)
+- **Google ML Kit** (`google_mlkit_text_recognition`, `google_mlkit_entity_extraction`)
+- **Camera & Image Picker** for capturing or selecting images.
 
-A few resources to get you started if this is your first Flutter project:
+## 🎥 Demo
+![Demo Video 1](screenshots/1.gif)  ![Demo Video 2](screenshots/2.gif)
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
-"# -Document-Scanner-" 
